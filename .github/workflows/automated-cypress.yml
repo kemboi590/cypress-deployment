@@ -1,4 +1,10 @@
+# names the workflow, so you’ll see this title in the Actions tab.
 name: Cypress Tests
+
+# This means the workflow runs on:
+# Any push directly to main
+# Any PR opened into main
+# This allows you to test code before merging.
 
 on:
   push:
@@ -6,42 +12,54 @@ on:
   pull_request:
     branches: [ main ]
 
+
+# defines a single job that runs on GitHub’s Ubuntu virtual machine.
+
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
 
+#  Pulls your code into the runner so it can install dependencies and run tests.
     steps:
       #  Checkout your repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      #  Setup Node.js
+      # Installs Node.js version 22.15.0.
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22.15.0
 
-      #  Setup pnpm
+      #  Installs pnpm version 9, but doesn’t run pnpm install automatically.
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
           version: 9
           run_install: false
 
-      #  Install dependencies with pnpm
+      #  Installs dependencies using your pnpm-lock.yaml exactly as written.
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      #  Run Cypress tests on your live Vercel deployment
+      #  Run Cypress tests on your live Vercel deployment ->
+      # Installs Cypress binary
+      # Launches Chrome
+      # Waits for your Vercel deployment to respond
+      # Runs your Cypress test suite
+
       - name: Run Cypress tests on Vercel deployment
         uses: cypress-io/github-action@v6
         with:
-          browser: chrome
-          wait-on: 'https://cypress-deployment.vercel.app/'
-          wait-on-timeout: 120
-          command: pnpm cypress run --config baseUrl=https://cypress-deployment.vercel.app/
+          browser: chrome # Runs tests in Chrome instead of Electron
+          wait-on: 'https://cypress-deployment.vercel.app/' # Don’t start tests until this URL returns a 200
+          wait-on-timeout: 120 # Wait up to 120 seconds
+          command: pnpm cypress run --config baseUrl=https://cypress-deployment.vercel.app/ #Custom command to run your tests, setting baseUrl for Cypress
 
       # Upload Cypress artifacts (for debugging failed tests)
+      # If any Cypress test fails:
+      # Screenshots and videos are uploaded as artifacts
+      # You can download them from the GitHub Actions UI to debug failures
       - name: Upload Cypress artifacts on failure
         if: failure()
         uses: actions/upload-artifact@v4
