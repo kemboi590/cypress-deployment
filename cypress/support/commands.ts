@@ -5,7 +5,7 @@ Cypress.Commands.add('getDataTest', (dataTestSelector) => {
 })
 
 // login as admin
-Cypress.Commands.add('loginAsAdmin', (email = 'bkemboi590@gmail.com', password = 'mypassword123') => {
+Cypress.Commands.add('loginAsAdmin', (email = 'bkemboi590@gmail.com', password = '123456') => {
     cy.visit('/login')
     cy.getDataTest('login-email-input').type(email)
     cy.getDataTest('login-password-input').type(password)

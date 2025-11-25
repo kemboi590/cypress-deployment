@@ -22,7 +22,7 @@ describe("login functionility", () => {
         cy.get('@login-passwordInput')
             .should('be.visible')
             .should('have.attr', 'type', 'password')
-            .type('mypassword123')
+            .type('123456')
 
 
         cy.getDataTest('login-submit-button').as('login-submitButton')
