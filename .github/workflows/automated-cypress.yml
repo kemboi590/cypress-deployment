@@ -1,5 +1,5 @@
 # names the workflow, so you’ll see this title in the Actions tab.
-name: Cypress Tests
+name: Regression Tests
 
 # This means the workflow runs on:
 # Any push directly to main
@@ -51,7 +51,7 @@ jobs:
       - name: Run Cypress tests on Vercel deployment
         uses: cypress-io/github-action@v6
         with:
-          browser: chrome # Runs tests in Chrome instead of Electron
+          # browser: chrome # Runs tests in Chrome instead of Electron
           wait-on: 'https://cypress-deployment.vercel.app/' # Don’t start tests until this URL returns a 200
           wait-on-timeout: 120 # Wait up to 120 seconds
           command: pnpm cypress run --config baseUrl=https://cypress-deployment.vercel.app/ #Custom command to run your tests, setting baseUrl for Cypress
